@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+    <title>TEST</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}">  
+   <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</head>
+<style type="text/css">
+	.header{
+		height: 75px;
+		width: 100%;
+		background-color: #2E3B3E;
+	}
+	.content{
+		height: 550px;
+		width: 100%;
+		background-image: url('{{ url_for('static', filename='img/login/timg.jpg') }}');
+		background-size: cover;
+	}
+	.login{
+		margin-top: 20%;
+		background-color: #D01257;
+		color: #fff;
+	}
+	.title{
+		text-align: center;
+	}
+	.distance{
+		padding: 10px 10px 10px;
+	}
+	.footer{
+		height: 55px;
+		width: 100%;
+		background-color: #1D242B;
+	}
+	.footer>h3{
+		color: #fff;
+		text-align: center;
+		margin: 0;
+		padding-top: 10px;
+	}
+</style>
+<body>
+<div class="header"></div>
+<div class="content">
+	<div class="col-xs-4 col-xs-offset-4">
+		<div class="panel login">
+    <div class="panel-heading">
+        <h2 class="title">请您登录</h2>
+    </div>
+    <div class="panel-body distance" >
+            <form class="bs-example bs-example-form" role="form">
+        <div class="input-group distance" >
+            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span> 用户：</span>
+            <input type="text" class="form-control" placeholder="请输入用户名" id="username" value="LiDun">
+        </div>
+        <div class="input-group distance" >
+            <span class="input-group-addon"><span class="glyphicon glyphicon-eye-open"></span> 密码：</span>
+            <input type="text" class="form-control" placeholder="密码不少于6位" id="password" value="ZuiShuai">
+        </div>
+    </form>
+    <div class="col-xs-offset-4 distance" >
+    	    <button type="button" class="btn btn-primary" id="login">登录</button>
+            <!--<button type="button" class="btn btn-danger">注册</button>-->
+    </div>
+    </div>
+    </div>
+    </div></div>
+
+<div class="footer">
+	<h3>CopyRight@2017</h3>
+</div>
+<script type="text/javascript">
+$("#login").click(function(){
+    var formDataLogin = new FormData();
+    var username = $("#username").val();
+    var password = $("#password").val();
+    formDataLogin.append('username', username);
+    formDataLogin.append('password', password);
+        $.ajax({
+            url: '/api/login',
+            type: 'POST',
+            data: formDataLogin,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result['status'] == 'ok') {
+                    alert("成功");
+                    window.location.href = "/light";
+                }
+                else{
+                    alert("失败");
+                    $("#username").val("");
+                    $("#password").val("");
+                }
+            }
+
+        })
+
+})
+</script>
+</body>
+</html>

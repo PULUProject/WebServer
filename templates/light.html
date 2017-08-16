@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+	<title>TEST</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">  
+   <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<style type="text/css">
+		.show_area{
+			background-color: #D01257;
+			height: 450px;
+			margin-top: 5%;
+		}
+		/*灯泡图片*/
+		.show_img{
+			margin-top: 10%;
+			margin-left: 30%;
+		}
+		/*按钮*/
+		.btn1{
+			border-radius: 50%;
+			margin-top: 0%;
+			margin-left: 33%;
+			background: #FFE869;
+		}
+		.on{
+			background: yellow;
+			color: #fff;
+		}
+		.off{
+			background: #C0C0C0;
+			color: #fff;
+		}
+	    .btn1:hover{
+	    	background: #FFE869;
+	    }
+	    .btn2{
+	    	margin-top: 10%;
+	    	margin-left: 10%;
+	    	border-radius: 50%;
+	    	background: #FFE869;
+	    	color: #000;
+	    }
+	    /**/
+	    .header{
+		height: 75px;
+		width: 100%;
+		background-color: #2E3B3E;
+	}
+	.content{
+		height: 550px;
+		width: 100%;
+		background-image: url("{{ url_for('static', filename='img/light/timg.jpg') }}");
+		background-size: cover;
+	}
+	.footer{
+		height: 55px;
+		width: 100%;
+		background-color: #1D242B;
+	}
+	.footer>h3{
+		color: #fff;
+		text-align: center;
+		margin: 0;
+		padding-top: 10px;
+	}
+	.row1{
+		position: relative;
+	}
+	/*进度条*/
+	.show_thermograph{
+		position: absolute;
+		right: 300px;
+		top: 215px;
+	}
+	.box{
+	 	position: relative;
+	 	 width: 200px;
+	 	  height: 50px; 
+	 	  border: 1px solid #eee; 
+	 	  margin:  50px auto 0;
+	}
+	.bg{
+		width: 200px;
+		height: 10px;
+		position: absolute;
+		top: 20px;
+		border: 1px solid #eee;
+		border-radius: 5px;
+	}
+	#bgcolor{
+		width: 0px;
+		height: 10px;
+		background: #0080FF;
+	}
+	</style>
+</head>
+<body>
+<div class="header"></div>
+<div class="content">
+	<div class="container">
+	<div class="row row1">
+		<div class="col-xs-10 col-md-offset-1 show_area">
+			<img src="{{ url_for('static', filename='img/light/off.png') }}" class="img-responsive show_img" id="img1" alt="Cinque Terre">
+			<input type="button" class="btn btn1" id="bt" value="OFF">
+			<button type="button" class="btn btn-warning btn2" id="bt2">紧急制动</button>
+		</div>
+		<div class="col-xs-2 show_thermograph">
+			<div class="box">
+				<div class="bg">
+					<div id="bgcolor"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+	</div>
+</div>
+
+
+<div class="footer">
+	<h3>CopyRight@2017</h3>
+</div>
+
+<script type="text/javascript">
+	function changeData(d){
+		document.getElementById("bgcolor").style.width=2*d+'px';
+	};
+	$("#bt").click(function(){
+		var formDataControl = new FormData();
+		var currentSrc =$("#img1").attr('src');
+		if(/on/.test(currentSrc)){
+			formDataControl.append('lightStatus', "0");
+			formDataControl.append('globalStatus', "1");
+		}
+		else{
+			formDataControl.append('lightStatus', "1");
+			formDataControl.append('globalStatus', "1");
+		}
+        $.ajax({
+            url: '/api/light',
+            type: 'POST',
+            data: formDataControl,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+
+            }
+
+        })
+
+	});
+	$("#bt2").click(function(){
+		var formDataControl = new FormData();
+		var currentSrc =$("#img1").attr('src');
+		if(/on/.test(currentSrc)){
+			formDataControl.append('lightStatus', "1");
+			formDataControl.append('globalStatus', "0");
+		}
+		else{
+			formDataControl.append('lightStatus', "0");
+			formDataControl.append('globalStatus', "0");
+		}
+		 $.ajax({
+            url: '/api/light',
+            type: 'POST',
+            data: formDataControl,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+            	$("#bt").attr("disabled",true);
+            }
+
+        })
+
+	});
+	setInterval(function(){
+        $.ajax({
+            url : '/api/light',
+            type : 'GET',
+            success : function(data){
+            	changeData(data['data'][0]+0);
+                if (data['data'][1] == '1') {
+                    $("#img1").attr('src','{{ url_for('static', filename='img/light/on.png') }}');
+					$("#bt").removeClass('off');
+					$("#bt").addClass('on');
+					$("#bt").val('ON');
+                }
+                else{
+					$("#img1").attr('src','{{ url_for('static', filename='img/light/off.png') }}');
+					$("#bt").removeClass('on');
+					$("#bt").addClass('off');
+					$("#bt").val('OFF');
+                }
+
+            }
+        });
+    },50);
+</script>
+</body>
+</html>
