@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</head>
+<style type="text/css">
+    body {
+        background: url('{{ url_for('static', filename='img/door/timg.jpg') }}');
+        background-size: cover;
+    }
+
+    .content {
+        background: #D01257;
+        height: 300px;
+        margin-top: 20%;
+        margin-left: 15%;
+        position: relative;
+    }
+
+    .btnPosition {
+        position: absolute;
+        left: 40%;
+        top: 40%;
+    }
+</style>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-8 col-sm-9 content">
+            <div class="btnPosition">
+                <button type="button" class="btn btn-success btn-lg" id="go">启动</button>
+                <button type="button" class="btn btn-warning btn-lg" id="reset">复位</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $("#go").click(function () {
+        var formDataControl = new FormData();
+        formDataControl.append('deskStatus', "1");
+{#        formDataControl.append('globalStatus', "1");#}
+
+        $.ajax({
+            url: '/api/desk',
+            type: 'POST',
+            data: formDataControl,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+
+            }
+
+        })
+
+    });
+    $("#reset").click(function () {
+        var formDataControl = new FormData();
+        formDataControl.append('deskStatus', "0");
+{#        formDataControl.append('globalStatus', "1");#}
+        $.ajax({
+            url: '/api/desk',
+            type: 'POST',
+            data: formDataControl,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+{#                $("#bt").attr("disabled", true);#}
+            }
+
+        })
+
+    });
+{#    setInterval(function () {#}
+{#        $.ajax({#}
+{#            url: '/api/desk',#}
+{#            type: 'GET',#}
+{#            success: function (data) {#}
+{#                changeData(data['data'][0] + 0);#}
+{#                if (data['data'][1] == '1') {#}
+{##}
+{#                }#}
+{#                else {#}
+{##}
+{#                }#}
+{##}
+{#            }#}
+{#        });#}
+{#    }, 50);#}
+</script>
+</body>
+</html>

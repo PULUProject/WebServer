@@ -34,6 +34,14 @@ def login():
 @flask_login.login_required
 def light():
     return render_template("light.html")
+@app.route('/door')
+# @flask_login.login_required
+def door():
+    return render_template("door/door.html")
+@app.route('/desk')
+# @flask_login.login_required
+def desk():
+    return render_template("door/desk.html")
 
 ###################APIS#######################
 @app.route('/api/light', methods=['POST','GET'])
@@ -56,6 +64,56 @@ def lightApi():
     rawData = cache.get("LIGHT_1_D")
 
     return jsonify({'status':'on','data':rawData})
+
+@app.route('/api/desk', methods=['POST','GET'])
+# @flask_login.login_required
+def deskApi():
+    if request.method == 'POST':
+        deskStatus = request.form['deskStatus']
+        rawData=[float(deskStatus)]
+        if deskStatus=="1":
+            # cache.set("DESK_1_U",rawData)
+            cache.lpush('Q', rawData)
+            # print cache.get("DESK_1_U")
+
+        else:
+            cache.lpush('Q', rawData)
+            # cache.set("DESK_1_U", rawData)
+            # print cache.get("DESK_1_U")
+
+
+
+    rawData = cache.get("DESK_1_D")
+
+    return jsonify({'status':'on','data':rawData})
+
+@app.route('/api/door', methods=['POST','GET'])
+# @flask_login.login_required
+def doorApi():
+
+    if request.method == 'POST':
+
+        doorStatus = request.form['doorStatus']
+        globalStatus = request.form['globalStatus']
+        dName = "DOOR_1"
+        rawData=[dName,float(globalStatus),float(doorStatus)]
+        print rawData
+        if doorStatus=="1":
+            cache.lpush('Q', rawData)
+            # cache.set("DOOR_1_U",rawData)
+            # print cache.get("DOOR_1_U")
+
+        else:
+            cache.lpush('Q', rawData)
+            # cache.set("DOOR_1_U", rawData)
+            # print cache.get("DOOR_1_U")
+
+
+
+    rawData = cache.get("DOOR_1_D")
+
+    return jsonify({'status':'on','data':rawData})
+
 @app.route('/api/login', methods=['POST','GET'])
 def loginApi():
     if request.method == 'POST':
@@ -102,4 +160,4 @@ def logout():
 
 application = app
 if __name__ == '__main__':
-    app.run(port=8085)
+    app.run(host="0.0.0.0",port=8085)

@@ -1,4 +1,5 @@
 from flask import Flask
+import redis
 from werkzeug.contrib.cache import MemcachedCache
 #from flask_mail import Mail, Message
 #from flask_bootstrap import Bootstrap
@@ -8,8 +9,9 @@ from werkzeug.contrib.cache import MemcachedCache
 
 
 app = Flask(__name__, instance_relative_config=False)
-
-cache = MemcachedCache(default_timeout=0)
+redisPool = redis.ConnectionPool(host="127.0.0.1", port=6379)
+cache = redis.Redis(connection_pool=redisPool)
+# cache = MemcachedCache(default_timeout=0)
 #app.config.from_pyfile('localConfig.py')
 
 #bootstrap = Bootstrap(app)

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+  <title></title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+   <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</head>
+<style type="text/css">
+  body{
+    background: url('{{ url_for('static', filename='img/door/timg.jpg') }}');
+    background-size: cover;
+  }
+  .content{
+    background: #D01257;
+    position: relative;
+    height: 300px;
+    margin-top: 20%;
+    margin-left: 15%;
+  }
+  #door1{
+    position: absolute;
+    left: 200px;
+  }
+  .door2{
+    position: absolute;
+    right: 250px;
+  }
+  .btnPosition{
+    position: absolute;
+    right: 50px;
+    top: 100px;
+  }
+</style>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-8 col-sm-9 content">
+      <div id="door1"><img src="{{ url_for('static', filename='img/door/door.png') }}" style="width: 300px"></div>
+      <div class="door2"><img src="{{ url_for('static', filename='img/door/door22.png') }}" style="width: 300px"></div>
+      <div class="btnPosition">
+      <button type="button" class="btn btn-success" id="closeDoor">关门</button>
+      <button type="button" class="btn btn-danger" id="openDoor">开门</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){
+  $('#closeDoor').click(function(){
+    $('#door1').animate({left: "+=120"}, 3000)
+  });
+  $('#openDoor').click(function(){
+    $('#door1').animate({left: "-=120"}, 3000)
+  });
+})
+</script>
+<script type="text/javascript">
+
+    $("#closeDoor").click(function () {
+        var formDataControl = new FormData();
+        formDataControl.append('doorStatus', "2");
+        formDataControl.append('globalStatus', "1");
+
+        $.ajax({
+            url: '/api/door',
+            type: 'POST',
+            data: formDataControl,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+
+            }
+
+        })
+
+    });
+    $("#openDoor").click(function () {
+        var formDataControl = new FormData();
+        formDataControl.append('doorStatus', "3");
+        formDataControl.append('globalStatus', "1");
+        $.ajax({
+            url: '/api/door',
+            type: 'POST',
+            data: formDataControl,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+{#                $("#bt").attr("disabled", true);#}
+            }
+
+        })
+
+    });
+{#    setInterval(function () {#}
+{#        $.ajax({#}
+{#            url: '/api/desk',#}
+{#            type: 'GET',#}
+{#            success: function (data) {#}
+{#                changeData(data['data'][0] + 0);#}
+{#                if (data['data'][1] == '1') {#}
+{##}
+{#                }#}
+{#                else {#}
+{##}
+{#                }#}
+{##}
+{#            }#}
+{#        });#}
+{#    }, 50);#}
+</script>
+</body>
+</html>
