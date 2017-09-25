@@ -70,7 +70,9 @@ def lightApi():
 def deskApi():
     if request.method == 'POST':
         deskStatus = request.form['deskStatus']
-        rawData=[float(deskStatus)]
+        dName = "DESK_1"
+        rawData=[dName,float(deskStatus)]
+        print rawData
         if deskStatus=="1":
             # cache.set("DESK_1_U",rawData)
             cache.lpush('Q', rawData)
